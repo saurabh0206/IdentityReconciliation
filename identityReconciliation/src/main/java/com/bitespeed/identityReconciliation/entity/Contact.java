@@ -1,4 +1,4 @@
-package com.bitespeed.identityRecoinciliation.entity;
+package com.bitespeed.identityReconciliation.entity;
 
 
 import jakarta.persistence.*;
@@ -38,6 +38,4 @@ public class Contact {
     private LocalDateTime deletedAt;
 }
 
-enum LinkPrecedence {
-    PRIMARY, SECONDARY
-}
+

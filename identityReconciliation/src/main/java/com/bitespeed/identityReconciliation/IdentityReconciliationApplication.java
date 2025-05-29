@@ -1,13 +1,13 @@
-package com.bitespeed.identityRecoinciliation;
+package com.bitespeed.identityReconciliation;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class IdentityRecoinciliationApplication {
+public class IdentityReconciliationApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(IdentityRecoinciliationApplication.class, args);
+		SpringApplication.run(IdentityReconciliationApplication.class, args);
 	}
 
 }

@@ -1,10 +1,10 @@
-package com.bitespeed.identityRecoinciliation;
+package com.bitespeed.identityReconciliation;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class IdentityRecoinciliationApplicationTests {
+class IdentityReconciliationApplicationTests {
 
 	@Test
 	void contextLoads() {
