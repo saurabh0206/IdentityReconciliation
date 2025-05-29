@@ -10,13 +10,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import java.util.List;
 
 @RestController
 @RequestMapping("/api")
+
 public class IdentityController {
 
     private  ContactService contactService;
+
 
     @PostMapping("/identity")
     public ResponseEntity<ContactResponse> identityContract( @RequestBody IdentityRequest request){
@@ -28,6 +31,7 @@ public class IdentityController {
         response.setSecondaryContactIds(List.of(2, 3));
 
     //  ContactResponse response= contactService.identifyContact(request);
+
       return ResponseEntity.ok(response) ;
     }
 }
