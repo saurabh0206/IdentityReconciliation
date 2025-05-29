@@ -1,10 +1,10 @@
-package com.bitespeed.identityRecoinciliation.dto;
+package com.bitespeed.identityReconciliation.dto;
 
 import lombok.Data;
 import java.util.List;
 
 @Data
-public class IdentityResponse {
+public class ContactResponse {
     private ContactDto contact;
 
     @Data

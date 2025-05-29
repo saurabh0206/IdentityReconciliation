@@ -1,4 +1,4 @@
-package com.bitespeed.identityRecoinciliation.dto;
+package com.bitespeed.identityReconciliation.dto;
 
 import lombok.Data;
 
