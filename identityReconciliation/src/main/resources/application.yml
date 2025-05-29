@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/bitespeed
+    username: root
+    password: MySQLji@22
+  application:
+    name: identityReconciliation
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        format_sql: true
+
+
+
+server:
+  port: 8080
+
+
+
