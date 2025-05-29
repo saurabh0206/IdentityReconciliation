@@ -128,6 +128,44 @@ public class ContactServiceImpl implements ContactService {
 
     private ContactResponse buildResponse(Contact primaryContact) {
 
+        //Get all secondary
+        List<Contact> secondaryContacts= contactRepository.findByLinkedId(primaryContact.getId());
+
+        Set<String> emails= new LinkedHashSet<>();
+        if(primaryContact.getEmail()!=null){
+            emails.add(primaryContact.getEmail());
+        }
+
+        secondaryContacts.stream()
+                .map(Contact::getEmail)
+                .filter(Object::nonNull)
+                .forEach(emails::add);
+
+        //colloect no
+
+        Set<String> phoneNumbers= new LinkedHashSet<>();
+        if (primaryContact.getPhoneNumber() != null) {
+            phoneNumbers.add(primaryContact.getPhoneNumber());
+        }
+        secondaryContacts.stream()
+                .map(Contact::getPhoneNumber)
+                .filter(Objects::nonNull)
+                .forEach(phoneNumbers::add);
+
+         // collect secondary cont ids
+        List<Integer> secondaryContactIds= secondaryContacts.stream()
+                .map(Contact::getId)
+                .collect(Collectors.toList());
+
+        return ContactResponse.builder()
+                .contact(ContactDto.builder()
+                .primaryContactId(primaryContact.getId())
+                .emails(new ArrayList<>(emails))
+                .phoneNumbers(new ArrayList<>(phoneNumbers))
+                .secondaryContactIds(secondaryContactIds)
+                .build())
+                .build();
+
     }
 
     private Contact createNewPrimaryContact(String email, String phoneNumber) {
