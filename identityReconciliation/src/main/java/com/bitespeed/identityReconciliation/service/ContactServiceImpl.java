@@ -11,9 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
-
 
 
 @Slf4j
@@ -50,12 +50,12 @@ public class ContactServiceImpl implements ContactService {
 
         //all primary contacts in matching into a SET
         Set<Contact> primaryContacts = uniqueContacts.stream()
-                .filter(c -> c.getLinkPrecedence()== LinkPrecedence.
-                PRIMARY).collect(Collectors.toSet());
+                .filter(c -> c.getLinkPrecedence() == LinkPrecedence.
+                        PRIMARY).collect(Collectors.toSet());
 
         //merge multiple primary contacts
-        if(primaryContacts.size()>1){
-            primaryContacts= mergePrimaryContracts(primaryContacts);
+        if (primaryContacts.size() > 1) {
+            primaryContacts = mergePrimaryContracts(primaryContacts);
         }
 
         //Get oldest primary contact
@@ -65,25 +65,79 @@ public class ContactServiceImpl implements ContactService {
 
 
         //check if we need to create a new secondary contact
-        boolean shouldCreateSecondary= (email!=null && !email.equals(primaryContact.getEmail())) ||
-                (phoneNumber !=null && !phoneNumber.equals(primaryContact.getPhoneNumber()));
+        boolean shouldCreateSecondary = (email != null && !email.equals(primaryContact.getEmail())) ||
+                (phoneNumber != null && !phoneNumber.equals(primaryContact.getPhoneNumber()));
 
-        if(shouldCreateSecondary){
-            createNewSecondaryContact(primaryContact,email,phoneNumber);
+        if (shouldCreateSecondary) {
+            createSecondaryContact(primaryContact, email, phoneNumber);
         }
 
-       return buildResponse(primaryContact);
+        return buildResponse(primaryContact);
     }
 
-    private void createNewSecondaryContact(Contact primaryContact, String email, String phoneNumber) {
+    private void createSecondaryContact(Contact primaryContact, String email, String phoneNumber) {
+
+        //is there existing seci=ondary contact with these details
+        boolean secondaryExist = contactRepository.findByLinkedId(primaryContact.getId()).stream()
+                .anyMatch(c ->
+                        (email != null && email.equals(c.getEmail())) ||
+                                (phoneNumber != null && phoneNumber.equals(c.getPhoneNumber()));
+
+        if (!secondaryExist) {
+
+            // builder().build() returns local instance
+            Contact secondaryContact = Contact.builder()
+                    .email(email)
+                    .phoneNumber(phoneNumber)
+                    .linkedId(primaryContact.getId())
+                    .linkPrecedence(LinkPrecedence.SECONDARY)
+                    .createdAt(LocalDateTime.now())
+                    .build();
+        }
+
     }
 
     private Set<Contact> mergePrimaryContracts(Set<Contact> primaryContacts) {
+        // Find the oldest primary contact
+
+        Contact oldestPrimary = primaryContacts.stream()
+                .min(Comparator.comparing(Contact::getCreatedAt))
+                .orElseThrow();
+
+        // We will Convert all other primary contacts to secondary
+        primaryContacts.stream()
+                .filter(c -> !c.getId().equals(oldestPrimary.getId()))
+                .forEach(c -> {
+                    c.setLinkPrecedence(LinkPrecedence.SECONDARY);
+                    c.setLinkedId(oldestPrimary.getId());
+                    c.setUpdatedAt(LocalDateTime.now());
+                    contactRepository.save(c);
+
+                    // Also update all contacts linked to this one
+
+                    contactRepository.findByLinkedId(c.getId()).forEach(secondary -> {
+                        secondary.setLinkedId(oldestPrimary.getId());
+                        contactRepository.save(secondary);
+                    });
+                });
+
+        // Return just the oldest primary
+        return Collections.singleton(oldestPrimary);
+
     }
 
-    private ContactResponse buildResponse(Contact newContact) {
+    private ContactResponse buildResponse(Contact primaryContact) {
+
     }
 
     private Contact createNewPrimaryContact(String email, String phoneNumber) {
+       Contact contact = Contact.builder()
+               .email(email)
+               .phoneNumber(phoneNumber)
+               .linkPrecedence(LinkPrecedence.PRIMARY)
+               .createdAt(LocalDateTime.now())
+               .build();
+        return contactRepository.save(contact);
+
     }
 }
