@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/identity")
-@RequiredArgsConstructor // 💡 This is necessary if you're using final fields
+@RequiredArgsConstructor
 public class IdentityController {
 
     private final ContactService contactService;
