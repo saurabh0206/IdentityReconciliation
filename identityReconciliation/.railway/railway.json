@@ -1,0 +1,8 @@
+{
+  "build": {
+    "builder": "maven",
+    "buildCommand": "mvn clean package -DskipTests",
+    "installCommand": "mvn clean install -DskipTests",
+    "startCommand": "java -jar target/identityReconciliation.jar"
+  }
+}
