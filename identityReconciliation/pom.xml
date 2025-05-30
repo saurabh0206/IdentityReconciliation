@@ -16,7 +16,7 @@
 	<description>Project for Bitespeed</description>
 
 	<properties>
-		<java.version>21</java.version>
+		<java.version>17</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -79,7 +79,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- Add this plugin for Java 21 compatibility -->
+			<!-- Add this plugin for Java 17 compatibility -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
