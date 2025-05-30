@@ -1,13 +1,14 @@
 package com.bitespeed.identityReconciliation.service;
 
 
+import com.bitespeed.identityReconciliation.dto.ContactDto;
 import com.bitespeed.identityReconciliation.dto.ContactResponse;
 import com.bitespeed.identityReconciliation.dto.IdentityRequest;
 import com.bitespeed.identityReconciliation.entity.Contact;
 import com.bitespeed.identityReconciliation.entity.LinkPrecedence;
 import com.bitespeed.identityReconciliation.repository.ContactRepository;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,7 +17,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 
-@Slf4j
+
 @Service
 @RequiredArgsConstructor
 public class ContactServiceImpl implements ContactService {
@@ -58,7 +59,7 @@ public class ContactServiceImpl implements ContactService {
             primaryContacts = mergePrimaryContracts(primaryContacts);
         }
 
-        //Get oldest primary contact
+        //Get old primary contact
         Contact primaryContact = primaryContacts.stream()
                 .min(Comparator.comparing(Contact::getCreatedAt))
                 .orElseThrow();
@@ -81,7 +82,7 @@ public class ContactServiceImpl implements ContactService {
         boolean secondaryExist = contactRepository.findByLinkedId(primaryContact.getId()).stream()
                 .anyMatch(c ->
                         (email != null && email.equals(c.getEmail())) ||
-                                (phoneNumber != null && phoneNumber.equals(c.getPhoneNumber()));
+                                (phoneNumber != null && phoneNumber.equals(c.getPhoneNumber())));
 
         if (!secondaryExist) {
 
@@ -93,6 +94,8 @@ public class ContactServiceImpl implements ContactService {
                     .linkPrecedence(LinkPrecedence.SECONDARY)
                     .createdAt(LocalDateTime.now())
                     .build();
+
+            contactRepository.save(secondaryContact);
         }
 
     }
@@ -138,7 +141,7 @@ public class ContactServiceImpl implements ContactService {
 
         secondaryContacts.stream()
                 .map(Contact::getEmail)
-                .filter(Object::nonNull)
+                .filter(email->email!=null)
                 .forEach(emails::add);
 
         //colloect no
