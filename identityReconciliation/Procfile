@@ -1,1 +1,9 @@
-web: java -Dserver.port=$PORT -jar target/identityReconciliation.jar
+web: java \
+  -Xmx256m \
+  -Xss512k \
+  -XX:MaxRAM=512m \
+  -XX:+HeapDumpOnOutOfMemoryError \
+  -XX:HeapDumpPath=/tmp/heapdump.hprof \
+  -XX:+UseSerialGC \
+  -Dserver.port=$PORT \
+  -jar target/identityReconciliation.jar

@@ -12,12 +12,24 @@ spring:
       ddl-auto: update
     properties:
       hibernate:
+        connection.pool_size: 5
         dialect: org.hibernate.dialect.MySQL8Dialect
         format_sql: true
         jdbc:
           time_zone: UTC
+    datasource:
+      hikari:
+        maximum-pool-size: 5
 
-
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,info
+  metrics:
+    export:
+      prometheus:
+        enabled: true
 
 server:
   port: ${PORT:8080}

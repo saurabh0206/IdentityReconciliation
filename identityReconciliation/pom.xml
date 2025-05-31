@@ -6,7 +6,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>3.5.0</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/>
 	</parent>
 
 	<groupId>com.bitespeed</groupId>
@@ -21,7 +21,7 @@
 		<maven.compiler.target>${java.version}</maven.compiler.target>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-		<!-- Use same Lombok version as dependency -->
+
 		<lombok.version>1.18.38</lombok.version>
 	</properties>
 
@@ -33,6 +33,10 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.mysql</groupId>
@@ -63,7 +67,11 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
 					<executable>true</executable>
-					<!-- Add this for Railway deployment -->
+					<jvmArguments>
+						-Xmx256m
+						-Xss512k
+						-XX:+UseSerialGC
+					</jvmArguments>
 					<excludes>
 						<exclude>
 							<groupId>org.projectlombok</groupId>
@@ -79,7 +87,7 @@
 					</execution>
 				</executions>
 			</plugin>
-			<!-- Add this plugin for Java 17 compatibility -->
+
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -96,7 +104,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
-		<!-- Add this for Railway deployment -->
+
 		<finalName>${project.artifactId}</finalName>
 	</build>
 </project>
